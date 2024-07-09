@@ -1,0 +1,10 @@
+{
+    "manifest_version": 3,
+    "name": "Parser for Revister",
+    "version": "1.0",
+    "permissions": ["activeTab", "storage"],
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }
+  
