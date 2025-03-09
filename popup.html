@@ -2,20 +2,106 @@
 <html>
     <head>
         <title>URL Saver</title>
+        <style>
+            body {
+                width: 300px;
+                min-height: 200px;
+                padding: 10px;
+                font-family: Arial, sans-serif;
+                text-align: center;
+            }
+            h1 {
+                font-size: 18px;
+                margin-bottom: 10px;
+                color: #2389ff;
+            }
+            textarea {
+                width: 90%;
+                height: 80px;
+                margin-bottom: 10px;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                resize: none;
+            }
+            .difficulty-container {
+                margin-bottom: 15px;
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+            }
+            .difficulty-option {
+                display: flex;
+                align-items: center;
+            }
+            label {
+                margin-left: 3px;
+                font-size: 14px;
+                font-weight: 600;
+            }
+            #saveUrlButton {
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+                background-color: #2389ff;
+                font-weight: 600;
+                color: white;
+                padding: 8px 15px;
+                transition: background-color 0.3s;
+            }
+            #saveUrlButton:hover {
+                background-color: #1a6ac7;
+            }
+            #saveUrlButton:disabled {
+                background-color: #a0c8ff;
+                cursor: not-allowed;
+            }
+            #status {
+                margin-top: 10px;
+                font-size: 12px;
+                height: 15px;
+            }
+            .success {
+                color: green;
+            }
+            .error {
+                color: red;
+            }
+            a{
+                text-decoration: none;
+                color: #2389ff;
+                font-size: 12px;
+                font-weight: 600;
+                margin-top: 10px;
+                display: block;
+                text-align: center;
+                margin-bottom: 10px;
+                cursor: pointer;
+                background-color: #a0c8ff;
+                padding: 8px 15px;
+            }
+        </style>
     </head>
-    <body style="width: 200px; height: 180px; text-align: center; ">
+    <body>
         <h1>Parser for Revister</h1>
         <textarea id="notes" placeholder="Enter Notes..."></textarea>
-        <div style="margin-bottom: 4%;">
-            <input type="radio" name="diff" style="padding: 8px;">
-            <label id="difficulty" style="font-size: 14px; font-weight: 600;">Easy</label>
-            <input type="radio" name="diff" style="padding: 8px;">
-            <label id="difficulty" style="font-size: 14px; font-weight: 600;">Medium</label>
-            <input type="radio" name="diff" style="padding: 8px;">
-            <label id="difficulty" style="font-size: 14px; font-weight: 600;">Hard</label>
+        <div class="difficulty-container">
+            <div class="difficulty-option">
+                <input type="radio" id="easyRadio" name="difficulty" value="Easy" checked>
+                <label for="easyRadio">Easy</label>
+            </div>
+            <div class="difficulty-option">
+                <input type="radio" id="mediumRadio" name="difficulty" value="Medium">
+                <label for="mediumRadio">Medium</label>
+            </div>
+            <div class="difficulty-option">
+                <input type="radio" id="hardRadio" name="difficulty" value="Hard">
+                <label for="hardRadio">Hard</label>
+            </div>
         </div>
-        <button id="saveUrlButton"
-            style=" border-color: white; cursor: pointer; border-radius: 5px; background-color: rgb(35, 137, 255); font-weight: 600; color: rgb(234, 234, 234); padding: 8px;">Send</button>
+        <button id="saveUrlButton">Save to Revister</button>
+        <a href="https://revister.vercel.app/" target="_blank">Visit Revister</a>
+        <div id="status"></div>
         <script src="popup.js"></script>
     </body>
 </html>
