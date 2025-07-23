@@ -1,20 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Get the current tab's URL and title when the popup opens
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const currentTab = tabs[0];
-    // Focus the notes textarea for immediate input
     document.getElementById('notes').focus();
   });
 
-  // Handle the save button click
   document.getElementById('saveUrlButton').addEventListener('click', () => {
     const saveButton = document.getElementById('saveUrlButton');
     const statusDiv = document.getElementById('status');
     
-    // Prevent multiple submissions
     if (saveButton.disabled) return;
     
-    // Get the notes value
     const notes = document.getElementById('notes').value.trim();
     if (!notes) {
       statusDiv.textContent = 'Please enter notes';
@@ -26,9 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const url = tabs[0].url;
       const title = tabs[0].title || '';
       
-      // Get the selected difficulty
       const difficultyRadios = document.getElementsByName('difficulty');
-      let difficulty = 'Easy'; // Default value
+      let difficulty = 'Easy'; 
       
       for (const radio of difficultyRadios) {
         if (radio.checked) {
@@ -37,13 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
       
-      // Show loading state
       saveButton.textContent = 'Saving...';
       saveButton.disabled = true;
       statusDiv.textContent = '';
       statusDiv.className = '';
       
-      // Create the item data
       const itemData = {
         id: generateUUID(),
         name: title,
@@ -56,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         date: new Date().toISOString()
       };
 
-      // Save to extension storage
       chrome.storage.local.get(['revister_items'], (result) => {
         const existingItems = result.revister_items || [];
         const updatedItems = [itemData, ...existingItems];
@@ -77,10 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
           statusDiv.textContent = 'Saved successfully! Open Revister app to sync.';
           statusDiv.className = 'success';
           
-          // Clear the notes field
           document.getElementById('notes').value = '';
           
-          // Close the popup after a delay
           setTimeout(() => {
             window.close();
           }, 2000);
@@ -90,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Simple UUID generator for extension use
 function generateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0;

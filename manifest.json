@@ -4,11 +4,15 @@
     "version": "1.0",
     "permissions": ["activeTab", "storage", "tabs", "scripting"],
     "host_permissions": [
-      "http://localhost:*/*"
+      "http://localhost:*/*",
+      "https://revister-getconsistent.vercel.app/*"
     ],
     "content_scripts": [
       {
-        "matches": ["http://localhost:*/*"],
+        "matches": [
+          "http://localhost:*/*",
+          "https://revister-getconsistent.vercel.app/*"
+        ],
         "js": ["content.js"]
       }
     ],
