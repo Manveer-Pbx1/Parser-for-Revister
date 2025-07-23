@@ -43,50 +43,58 @@ document.addEventListener('DOMContentLoaded', () => {
       statusDiv.textContent = '';
       statusDiv.className = '';
       
-      fetch('http://localhost:5000/save-url', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          name: title,
-          url: url, 
-          notes: notes, 
-          difficulty: difficulty,
-          completed: false,
-          saved: true,
-          revisitCount: 0
-        }),
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('URL and notes saved:', data);
-        saveButton.textContent = 'Save to Revister';
-        saveButton.disabled = false;
-        statusDiv.textContent = 'Saved successfully!';
-        statusDiv.className = 'success';
+      // Create the item data
+      const itemData = {
+        id: generateUUID(),
+        name: title,
+        url: url, 
+        notes: notes, 
+        difficulty: difficulty,
+        completed: false,
+        saved: true,
+        revisitCount: 0,
+        date: new Date().toISOString()
+      };
+
+      // Save to extension storage
+      chrome.storage.local.get(['revister_items'], (result) => {
+        const existingItems = result.revister_items || [];
+        const updatedItems = [itemData, ...existingItems];
         
-        // Clear the notes field
-        document.getElementById('notes').value = '';
-        
-        // Close the popup after a delay (optional)
-        setTimeout(() => {
-          window.close();
-        }, 1500);
-      })
-      .catch(error => {
-        console.error('Error saving URL and notes:', error);
-        saveButton.textContent = 'Save to Revister';
-        saveButton.disabled = false;
-        statusDiv.textContent = 'Error saving: ' + error.message;
-        statusDiv.className = 'error';
+        chrome.storage.local.set({ revister_items: updatedItems }, () => {
+          console.log('Item saved to extension storage:', itemData);
+
+          chrome.tabs.query({ url: ["http://localhost:*/*", "https://revister-getconsistent.vercel.app"] }, (tabs) => {
+            tabs.forEach(tab => {
+              chrome.tabs.sendMessage(tab.id, { type: 'ITEM_ADDED', item: itemData })
+                .catch(() => {
+                });
+            });
+          });
+          
+          saveButton.textContent = 'Save to Revister';
+          saveButton.disabled = false;
+          statusDiv.textContent = 'Saved successfully! Open Revister app to sync.';
+          statusDiv.className = 'success';
+          
+          // Clear the notes field
+          document.getElementById('notes').value = '';
+          
+          // Close the popup after a delay
+          setTimeout(() => {
+            window.close();
+          }, 2000);
+        });
       });
     });
   });
 });
-  
+
+// Simple UUID generator for extension use
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
